@@ -44,8 +44,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         cu?.post(tap: loc)
         cmdu?.post(tap: loc)
         
+        let pasteboard = NSPasteboard.general
         // Get string content from clipboard.
-        guard let clipboardContent = NSPasteboard.general.pasteboardItems?.first?.string(forType: .string)
+        guard let clipboardContent = pasteboard.pasteboardItems?.first?.string(forType: .string)
             else { return }
         
         // Do the convertion
@@ -57,8 +58,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let convertedString = String(utf16CodeUnits: convertedChars, count: convertedChars.count)
         
         // Write converted content to clipboard.
-        NSPasteboard.general.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-        NSPasteboard.general.setString(convertedString, forType: .string)
+        pasteboard.declareTypes([.string], owner: nil)
+        pasteboard.setString(convertedString, forType: .string)
         
         // Simulate "cmd + v" that pastes from clipboard.
         let vd = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: true)
