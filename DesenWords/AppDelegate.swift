@@ -50,15 +50,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Do the convertion
         let utf16ClipboardContent = clipboardContent.utf16
-        var re: [UInt16] = []
+        var convertedChars: [UInt16] = []
         for char in utf16ClipboardContent {
-            re.append(contentsOf: [char, 806, 786])
+            convertedChars.append(contentsOf: [char, 806, 786])
         }
-        let s = String(utf16CodeUnits: re, count: re.count)
+        let convertedString = String(utf16CodeUnits: convertedChars, count: convertedChars.count)
         
         // Write converted content to clipboard.
         NSPasteboard.general.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-        NSPasteboard.general.setString(s, forType: .string)
+        NSPasteboard.general.setString(convertedString, forType: .string)
         
         // Simulate "cmd + v" that pastes from clipboard.
         let vd = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: true)
