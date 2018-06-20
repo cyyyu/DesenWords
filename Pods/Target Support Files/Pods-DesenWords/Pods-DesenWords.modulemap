@@ -1,6 +1,0 @@
-framework module Pods_DesenWords {
-  umbrella header "Pods-DesenWords-umbrella.h"
-
-  export *
-  module * { export * }
-}
