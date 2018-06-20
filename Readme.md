@@ -2,6 +2,10 @@
 
 <img src="./img/demo.gif" alt="screenshot" width="350" />
 
+### Download
+
+[Here](https://github.com/cyyyu/DesenWords)
+
 ### Usage
 
 1. Select whatever you want to convert.
