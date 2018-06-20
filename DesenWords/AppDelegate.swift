@@ -27,50 +27,69 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func tappedHotKey() {
-        // Simulate "cmd + c" that copys current selection to clipboard.
-        let src = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+         simulateCopy()
         
-        let cmdd = CGEvent(keyboardEventSource: src, virtualKey: 0x38, keyDown: true)
-        let cmdu = CGEvent(keyboardEventSource: src, virtualKey: 0x38, keyDown: false)
-        let cd = CGEvent(keyboardEventSource: src, virtualKey: 0x08, keyDown: true)
-        let cu = CGEvent(keyboardEventSource: src, virtualKey: 0x08, keyDown: false)
-
-        cd?.flags = CGEventFlags.maskCommand;
-        
-        let loc = CGEventTapLocation.cghidEventTap
-        
-        cmdd?.post(tap: loc)
-        cd?.post(tap: loc)
-        cu?.post(tap: loc)
-        cmdu?.post(tap: loc)
-        
-        let pasteboard = NSPasteboard.general
-        // Get string content from clipboard.
-        guard let clipboardContent = pasteboard.pasteboardItems?.first?.string(forType: .string)
-            else { return }
-        
-        // Do the convertion
-        let utf16ClipboardContent = clipboardContent.utf16
-        var convertedChars: [UInt16] = []
-        for char in utf16ClipboardContent {
-            convertedChars.append(contentsOf: [char, 806, 786])
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+            // Get string content from clipboard.
+            let pasteboard = NSPasteboard.general
+            guard let clipboardContent = pasteboard.pasteboardItems?.first?.string(forType: .string)
+                else { return }
+            
+            // Do the convertion
+            let utf16ClipboardContent = clipboardContent.utf16
+            var convertedChars: [UInt16] = []
+            
+            for char in utf16ClipboardContent {
+                convertedChars.append(contentsOf: [char, 806, 786])
+            }
+            
+            let convertedString = String(utf16CodeUnits: convertedChars, count: convertedChars.count)
+            
+            // Write converted content to clipboard.
+            pasteboard.clearContents()
+            pasteboard.declareTypes([.string], owner: nil)
+            pasteboard.setString(convertedString, forType: .string)
+            
+            simulatePaste()
         }
-        let convertedString = String(utf16CodeUnits: convertedChars, count: convertedChars.count)
-        
-        // Write converted content to clipboard.
-        pasteboard.declareTypes([.string], owner: nil)
-        pasteboard.setString(convertedString, forType: .string)
-        
-        // Simulate "cmd + v" that pastes from clipboard.
-        let vd = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: true)
-        let vu = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: false)
-        
-        vd?.flags = CGEventFlags.maskCommand;
-        
-        cmdd?.post(tap: loc)
-        vd?.post(tap: loc)
-        vu?.post(tap: loc)
-        cmdu?.post(tap: loc)
     }
+}
+
+func simulateCopy() {
+    // Simulate "cmd + c" that copys current selection to clipboard.
+    let src = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+    
+    let cmdd = CGEvent(keyboardEventSource: src, virtualKey: 0x38, keyDown: true)
+    let cmdu = CGEvent(keyboardEventSource: src, virtualKey: 0x38, keyDown: false)
+    let cd = CGEvent(keyboardEventSource: src, virtualKey: 0x08, keyDown: true)
+    let cu = CGEvent(keyboardEventSource: src, virtualKey: 0x08, keyDown: false)
+    
+    let loc = CGEventTapLocation.cghidEventTap
+    
+    cd?.flags = CGEventFlags.maskCommand;
+
+    cmdd?.post(tap: loc)
+    cd?.post(tap: loc)
+    cu?.post(tap: loc)
+    cmdu?.post(tap: loc)
+}
+
+func simulatePaste() {
+    // Simulate "cmd + v" that pastes from clipboard.
+    let src = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+    
+    let cmdd = CGEvent(keyboardEventSource: src, virtualKey: 0x38, keyDown: true)
+    let cmdu = CGEvent(keyboardEventSource: src, virtualKey: 0x38, keyDown: false)
+    let vd = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: true)
+    let vu = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: false)
+    
+    let loc = CGEventTapLocation.cghidEventTap
+
+    vd?.flags = CGEventFlags.maskCommand;
+    
+    cmdd?.post(tap: loc)
+    vd?.post(tap: loc)
+    vu?.post(tap: loc)
+    cmdu?.post(tap: loc)
 }
 
