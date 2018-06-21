@@ -1,5 +1,9 @@
 # DesenWords
 
+[![platform: macOS](https://img.shields.io/badge/platform-macOS-blue.svg)](https://developer.apple.com/osx/)
+[![language: Swift 4.1](https://img.shields.io/badge/language-Swift%204.1-yellow.svg)](https://developer.apple.com/swift/)
+[![GitHub license](https://img.shields.io/github/license/cyyyu/DesenWords.svg)](https://github.com/cyyyu/DesenWords/blob/master/LICENSE)
+
 <img src="./img/demo.gif" alt="screenshot" width="350" />
 
 ### Download
