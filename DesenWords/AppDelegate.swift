@@ -37,11 +37,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             // Do the convertion
             let utf16ClipboardContent = clipboardContent.utf16
-            var convertedChars: [UInt16] = []
+            var convertedChars: [UInt16] = [32]
+            convertedChars.append(contentsOf: randomVowel())
             
             for char in utf16ClipboardContent {
-                convertedChars.append(contentsOf: [char, 806, 786])
+                var convertedChar = [char]
+                convertedChar.append(contentsOf: randomVowel())
+                convertedChars.append(contentsOf: convertedChar)
             }
+            
+            convertedChars.append(contentsOf: randomVowel())
             
             let convertedString = String(utf16CodeUnits: convertedChars, count: convertedChars.count)
             
@@ -91,5 +96,20 @@ func simulatePaste() {
     vd?.post(tap: loc)
     vu?.post(tap: loc)
     cmdu?.post(tap: loc)
+}
+
+let vowels: [[UInt16]] = [
+    [806, 786],
+    [8405, 3865],
+    [8417, 3902],
+    [8400, 805],
+    [7619, 808],
+    [3968, 3893],
+    [3964, 3865],
+    [3962, 3426]
+]
+func randomVowel() -> [UInt16] {
+    let randomIndex = Int(arc4random_uniform(UInt32(vowels.count)))
+    return vowels[randomIndex]
 }
 
